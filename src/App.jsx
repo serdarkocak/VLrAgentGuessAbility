@@ -4,6 +4,7 @@ import Home from './pages/Home.jsx';
 import Game from './pages/Game.jsx';
 import Result from './pages/Result.jsx';
 import Leaderboard from './pages/Leaderboard.jsx';
+import BattleRoom from './pages/BattleRoom.jsx';
 
 export default function App() {
   return (
@@ -13,6 +14,7 @@ export default function App() {
         <Route path="/play" element={<Game />} />
         <Route path="/result" element={<Result />} />
         <Route path="/leaderboard" element={<Leaderboard />} />
+        <Route path="/battle" element={<BattleRoom />} />
       </Routes>
     </Layout>
   );

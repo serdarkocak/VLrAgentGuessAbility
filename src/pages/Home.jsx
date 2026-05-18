@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useLanguage } from '../i18n/LanguageContext.jsx';
+import { isSupabaseConfigured } from '../lib/supabase.js';
 
 const MODE_IDS = ['classic', 'timed', 'daily'];
 const MODE_ICONS = { classic: '🎯', timed: '⏱', daily: '📅' };
@@ -92,6 +93,20 @@ export default function Home() {
       >
         {t('home.play')}
       </motion.button>
+
+      <button
+        type="button"
+        onClick={() => isSupabaseConfigured && navigate('/battle')}
+        disabled={!isSupabaseConfigured}
+        title={!isSupabaseConfigured ? t('battle.supabaseRequired') : undefined}
+        className={`w-full rounded-sm border-2 py-4 text-xl font-valorant tracking-wider transition ${
+          isSupabaseConfigured
+            ? 'border-valorant-red/60 text-valorant-red hover:border-valorant-red hover:bg-valorant-red/10'
+            : 'cursor-not-allowed border-white/10 text-white/30'
+        }`}
+      >
+        ⚔ {t('battle.title')}
+      </button>
 
       <button
         type="button"

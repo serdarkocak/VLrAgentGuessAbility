@@ -54,6 +54,8 @@ NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=your-publishable-key
 
 Supabase yapılandırılmazsa skorlar otomatik olarak `localStorage`'a kaydedilir.
 
+Kapışma modu için ek olarak [`supabase/rooms.sql`](supabase/rooms.sql) dosyasını SQL Editor'de çalıştırın ve **Realtime**'da `rooms` tablosunu etkinleştirin.
+
 ## Ses Dosyaları
 
 Sesler `AbilitySounds/` klasöründedir. Vite build/dev sırasında `/sounds/` altında servis edilir.
