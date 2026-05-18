@@ -32,23 +32,22 @@ git push -u origin main
 5. **Dockerfile location**: `/Dockerfile` (kök dizin)
 6. **Port**: `80` (Expose / Ports bölümünde container port **80**)
 
-### 3. Ortam değişkenleri (önemli)
+### 3. Ortam değişkenleri (önemli — Supabase için zorunlu)
 
-Vite değişkenleri **build sırasında** koda gömülür. Coolify'da:
+Vite değişkenleri **build sırasında** Docker image içine gömülür. Coolify'da sadece "Runtime" env verirsen **çalışmaz**; "Supabase yapılandırılmadı" görürsün.
 
-**Project → Application → Environment Variables**
+**Application → Environment Variables** — her ikisi için **✓ Available at Buildtime** (veya "Is Build Variable") işaretle:
 
-| Değişken | Örnek | Build time? |
-|----------|--------|-------------|
-| `NEXT_PUBLIC_SUPABASE_URL` | `https://xxx.supabase.co` | Evet |
-| `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | `sb_publishable_...` | Evet |
+| Değişken | Değer |
+|----------|--------|
+| `NEXT_PUBLIC_SUPABASE_URL` | `https://bzrdvlbplvwyiuiakynx.supabase.co` |
+| `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | `sb_publishable_...` (Supabase → Settings → API) |
 
-Coolify sürümüne göre:
+Env ekledikten veya değiştirdikten sonra mutlaka **Redeploy** (yeniden build) yap.
 
-- **"Available at Buildtime"** / **Build Variable** kutusunu işaretle, veya
-- **Build Arguments** bölümüne aynı değişkenleri ekle
+**Not:** Site `http://` ile açılıyorsa skorlar yine localStorage'a düşer (Supabase yoksa); `crypto.randomUUID` hatası kodda düzeltildi. Global leaderboard için HTTPS + build-time env gerekir.
 
-Supabase kullanmıyorsan bu iki değişkeni boş bırakabilirsin; skorlar yalnızca tarayıcıda (localStorage) saklanır.
+**HTTPS önerisi:** Coolify'da domain'e SSL aç (`https://quiz.fjorterminal.com`). Hem Supabase hem mobil tarayıcılar için daha sağlıklı.
 
 ### 4. Domain (opsiyonel)
 

@@ -1,4 +1,5 @@
 import { supabase, isSupabaseConfigured } from './supabase.js';
+import { generateId } from './id.js';
 
 const LS_KEY = 'valorant-quiz-scores';
 
@@ -32,7 +33,7 @@ export async function saveScore({ nickname, mode, difficulty, score, correct, to
   }
 
   const local = readLocalScores();
-  local.push({ ...entry, id: crypto.randomUUID() });
+  local.push({ ...entry, id: generateId() });
   local.sort((a, b) => b.score - a.score);
   writeLocalScores(local);
   return { ok: true, source: 'local' };
