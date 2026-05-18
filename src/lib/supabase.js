@@ -1,19 +1,8 @@
 import { createClient } from '@supabase/supabase-js';
+import { getSupabaseCredentials, isValidSupabaseConfig } from './supabaseConfig.js';
 
-const url =
-  import.meta.env.VITE_SUPABASE_URL ?? import.meta.env.NEXT_PUBLIC_SUPABASE_URL;
+const { url, key } = getSupabaseCredentials();
 
-const key =
-  import.meta.env.VITE_SUPABASE_ANON_KEY ??
-  import.meta.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
-
-const PLACEHOLDER_URLS = new Set([
-  'https://your-project.supabase.co',
-  '',
-]);
-
-export const isSupabaseConfigured = Boolean(
-  url && key && !PLACEHOLDER_URLS.has(url),
-);
+export const isSupabaseConfigured = isValidSupabaseConfig(url, key);
 
 export const supabase = isSupabaseConfigured ? createClient(url, key) : null;

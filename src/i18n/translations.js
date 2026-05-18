@@ -111,6 +111,17 @@ export const translations = {
       play: 'Sesi çal',
       replay: 'Tekrar çal',
     },
+    diagnostics: {
+      title: '🔧 Supabase teşhis',
+      runtimeUrl: 'Runtime URL',
+      runtimeKey: 'Runtime anahtar',
+      buildUrl: 'Build URL',
+      buildKey: 'Build anahtar',
+      activeSource: 'Aktif kaynak',
+      missing: 'yok',
+      present: 'var',
+      hint: 'Coolify → Environment Variables (runtime): NEXT_PUBLIC_SUPABASE_URL ve NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ekleyip container yeniden başlat.',
+    },
   },
   en: {
     nav: {
@@ -223,6 +234,17 @@ export const translations = {
     audio: {
       play: 'Play sound',
       replay: 'Replay sound',
+    },
+    diagnostics: {
+      title: '🔧 Supabase diagnostics',
+      runtimeUrl: 'Runtime URL',
+      runtimeKey: 'Runtime key',
+      buildUrl: 'Build URL',
+      buildKey: 'Build key',
+      activeSource: 'Active source',
+      missing: 'missing',
+      present: 'set',
+      hint: 'Coolify → Environment Variables (runtime): add NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY, then restart container.',
     },
   },
 };

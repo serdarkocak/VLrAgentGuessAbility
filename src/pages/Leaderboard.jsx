@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { getTopScores } from '../lib/scores.js';
 import { isSupabaseConfigured } from '../lib/supabase.js';
 import { useLanguage } from '../i18n/LanguageContext.jsx';
+import SupabaseDiagnostics from '../components/SupabaseDiagnostics.jsx';
 
 export default function Leaderboard() {
   const { t, tMode, tDifficulty, dateLocale } = useLanguage();
@@ -28,6 +29,7 @@ export default function Leaderboard() {
             {source === 'supabase' ? t('leaderboard.global') : t('leaderboard.local')}
             {!isSupabaseConfigured && t('leaderboard.notConfigured')}
           </p>
+          {!isSupabaseConfigured && <SupabaseDiagnostics />}
         </div>
         <Link to="/" className="btn-primary">
           {t('leaderboard.play')}
