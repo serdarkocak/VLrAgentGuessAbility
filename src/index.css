@@ -1,0 +1,65 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: 'Rajdhani', 'Segoe UI', sans-serif;
+    min-height: 100vh;
+    background-color: #0f1923;
+    background-image:
+      radial-gradient(ellipse at 20% 0%, rgba(255, 70, 85, 0.08) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 100%, rgba(255, 70, 85, 0.05) 0%, transparent 50%);
+  }
+
+  h1,
+  h2,
+  h3,
+  .font-valorant {
+    font-family: 'Bebas Neue', Impact, sans-serif;
+    letter-spacing: 0.06em;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-sm border-2 border-valorant-red bg-valorant-red px-6 py-3 font-semibold uppercase tracking-widest text-white transition hover:bg-transparent hover:shadow-glow focus:outline-none focus:ring-2 focus:ring-valorant-red focus:ring-offset-2 focus:ring-offset-valorant-dark disabled:cursor-not-allowed disabled:opacity-50;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 rounded-sm border-2 border-valorant-light/30 bg-transparent px-6 py-3 font-semibold uppercase tracking-widest text-valorant-light transition hover:border-valorant-red hover:text-valorant-red focus:outline-none;
+  }
+
+  .card-panel {
+    @apply rounded-sm border border-white/10 bg-valorant-gray/60 backdrop-blur-sm;
+  }
+
+  /* Agent card — compact square */
+  .agent-card {
+    @apply relative aspect-square overflow-hidden rounded-sm border-2 border-white/10 transition-all duration-150;
+  }
+
+  .agent-card.selected {
+    @apply border-valorant-red shadow-glow scale-[1.04];
+  }
+
+  .agent-card:not(.selected):not(:disabled):hover {
+    @apply border-valorant-red/60 scale-[1.02];
+  }
+
+  /* Ability slot buttons */
+  .slot-btn {
+    @apply flex flex-col items-center justify-center gap-1.5 rounded-sm border-2 border-white/20
+           bg-valorant-dark/80 py-2.5 min-h-[88px] transition-all duration-100
+           hover:border-valorant-red hover:bg-valorant-red/10 hover:shadow-glow
+           active:scale-95 disabled:cursor-not-allowed disabled:opacity-30;
+  }
+
+  .slot-btn.selected {
+    @apply border-valorant-red bg-valorant-red/20 text-valorant-red shadow-glow scale-[1.03];
+  }
+}
