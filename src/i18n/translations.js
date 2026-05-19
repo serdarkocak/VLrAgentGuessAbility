@@ -125,6 +125,7 @@ export const translations = {
       host: 'Host',
       waitingPlayers: 'En az {{n}} oyuncu gerekli',
       waitingHost: 'Host oyunu başlatmayı bekliyor…',
+      syncing: 'Oyun senkronize ediliyor…',
       startGame: 'Oyunu Başlat',
       leave: 'Odadan Ayrıl',
       round: 'Tur {{current}}/{{total}}',
@@ -137,6 +138,8 @@ export const translations = {
       finalScores: 'Final Skorları',
       backToMenu: 'Yeni Oda',
       supabaseRequired: 'Kapışma modu için Supabase gerekli.',
+      expired: 'Oda süresi doldu veya kapatıldı',
+      notFound: 'Oda bulunamadı',
     },
     diagnostics: {
       title: '🔧 Supabase teşhis',
@@ -147,7 +150,7 @@ export const translations = {
       activeSource: 'Aktif kaynak',
       missing: 'yok',
       present: 'var',
-      hint: 'Coolify → Environment Variables (runtime): NEXT_PUBLIC_SUPABASE_URL ve NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ekleyip container yeniden başlat.',
+      hint: 'Coolify → Environment Variables (runtime): NEXT_PUBLIC_SUPABASE_URL ve NEXT_PUBLIC_SUPABASE_ANON_KEY ekleyip container yeniden başlat.',
     },
   },
   en: {
@@ -276,6 +279,7 @@ export const translations = {
       host: 'Host',
       waitingPlayers: 'At least {{n}} players required',
       waitingHost: 'Waiting for host to start…',
+      syncing: 'Syncing game state…',
       startGame: 'Start Game',
       leave: 'Leave Room',
       round: 'Round {{current}}/{{total}}',
@@ -288,6 +292,8 @@ export const translations = {
       finalScores: 'Final Scores',
       backToMenu: 'New Room',
       supabaseRequired: 'Battle mode requires Supabase.',
+      expired: 'Room expired or was closed',
+      notFound: 'Room not found',
     },
     diagnostics: {
       title: '🔧 Supabase diagnostics',
@@ -298,7 +304,7 @@ export const translations = {
       activeSource: 'Active source',
       missing: 'missing',
       present: 'set',
-      hint: 'Coolify → Environment Variables (runtime): add NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY, then restart container.',
+      hint: 'Coolify → Environment Variables (runtime): add NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY, then restart container.',
     },
   },
 };

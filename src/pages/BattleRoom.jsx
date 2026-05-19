@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useBattleRoom } from '../hooks/useBattleRoom.js';
+import { unlockAudioPlayback } from '../hooks/useAudio.js';
 import { useLanguage } from '../i18n/LanguageContext.jsx';
 import { isSupabaseConfigured } from '../lib/supabase.js';
 import { normalizeRoomCode } from '../lib/roomCode.js';
@@ -14,6 +15,21 @@ export default function BattleRoom() {
   const { t } = useLanguage();
   const battle = useBattleRoom();
   const [joinCode, setJoinCode] = useState('');
+
+  const createRoom = () => {
+    unlockAudioPlayback();
+    battle.handleCreateRoom();
+  };
+
+  const joinRoom = () => {
+    unlockAudioPlayback();
+    battle.handleJoinRoom(joinCode);
+  };
+
+  const startGame = () => {
+    unlockAudioPlayback();
+    battle.startGame();
+  };
 
   if (!isSupabaseConfigured) {
     return (
@@ -54,7 +70,7 @@ export default function BattleRoom() {
           type="button"
           className="btn-primary w-full"
           disabled={!battle.playerName.trim()}
-          onClick={battle.handleCreateRoom}
+          onClick={createRoom}
         >
           {t('battle.createRoom')}
         </button>
@@ -73,13 +89,19 @@ export default function BattleRoom() {
             type="button"
             className="btn-secondary w-full"
             disabled={joinCode.length !== 4 || !battle.playerName.trim()}
-            onClick={() => battle.handleJoinRoom(joinCode)}
+            onClick={joinRoom}
           >
             {t('battle.joinRoom')}
           </button>
         </div>
 
-        {battle.error && <p className="text-center text-sm text-valorant-red">{battle.error}</p>}
+        {battle.error && (
+          <p className="text-center text-sm text-valorant-red">
+            {battle.error === 'expired' || battle.error === 'notFound'
+              ? t(`battle.${battle.error}`)
+              : battle.error}
+          </p>
+        )}
 
         <Link to="/" className="block text-center text-sm text-white/40 hover:text-white">
           {t('nav.home')}
@@ -96,7 +118,8 @@ export default function BattleRoom() {
         isHost={battle.isHost}
         minPlayers={battle.minPlayers}
         maxPlayers={battle.maxPlayers}
-        onStart={battle.startGame}
+        syncing={battle.isSyncing}
+        onStart={startGame}
         onLeave={battle.leaveRoom}
       />
     );

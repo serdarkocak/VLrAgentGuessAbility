@@ -1,5 +1,25 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Howl } from 'howler';
+import { Howl, Howler } from 'howler';
+
+// Minimal silent WAV — unlocks Web Audio on first user gesture
+const SILENT_SRC =
+  'data:audio/wav;base64,UklGRigAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=';
+
+let unlockHowl = null;
+
+export function unlockAudioPlayback() {
+  if (typeof window === 'undefined') return;
+
+  const ctx = Howler.ctx;
+  if (ctx?.state === 'suspended') {
+    void ctx.resume();
+  }
+
+  if (!unlockHowl) {
+    unlockHowl = new Howl({ src: [SILENT_SRC], volume: 0.001 });
+  }
+  unlockHowl.play();
+}
 
 export function useAudio() {
   const howlRef = useRef(null);
@@ -21,14 +41,16 @@ export function useAudio() {
 
       const howl = new Howl({
         src: [src],
-        html5: true,
         rate,
         onplay: () => setIsPlaying(true),
         onend: () => setIsPlaying(false),
         onstop: () => setIsPlaying(false),
         onpause: () => setIsPlaying(false),
         onloaderror: () => setIsPlaying(false),
-        onplayerror: () => setIsPlaying(false),
+        onplayerror: (_id, err) => {
+          setIsPlaying(false);
+          console.warn('Audio play failed:', err);
+        },
       });
 
       howlRef.current = howl;

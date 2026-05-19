@@ -40,8 +40,8 @@ Vite değişkenleri **build sırasında** Docker image içine gömülür. Coolif
 
 | Değişken | Değer |
 |----------|--------|
-| `NEXT_PUBLIC_SUPABASE_URL` | `https://bzrdvlbplvwyiuiakynx.supabase.co` |
-| `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | `sb_publishable_...` (Supabase → Settings → API) |
+| `NEXT_PUBLIC_SUPABASE_URL` | `https://supabase-vlragent.fjorterminal.com` |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | JWT anon key (Supabase → Settings → API) |
 
 Env ekledikten veya değiştirdikten sonra mutlaka **Redeploy** (yeniden build) yap.
 
@@ -102,8 +102,8 @@ Loglarda şunu görmelisin:
 
 ```bash
 docker build \
-  --build-arg NEXT_PUBLIC_SUPABASE_URL=https://xxx.supabase.co \
-  --build-arg NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=sb_publishable_xxx \
+  --build-arg NEXT_PUBLIC_SUPABASE_URL=https://supabase-vlragent.fjorterminal.com \
+  --build-arg NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJ... \
   -t valorant-quiz .
 
 docker run -p 8080:80 valorant-quiz

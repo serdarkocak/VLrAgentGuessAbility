@@ -22,39 +22,22 @@ Tarayıcıda: http://localhost:5173
 
 ## Supabase (opsiyonel)
 
-1. [Supabase](https://supabase.com) projesi oluşturun
-2. SQL Editor'de şu tabloyu çalıştırın:
-
-```sql
-create table scores (
-  id uuid primary key default gen_random_uuid(),
-  nickname text not null,
-  mode text not null,
-  difficulty text not null,
-  score int not null,
-  correct int not null,
-  total int not null,
-  created_at timestamptz default now()
-);
-
-alter table scores enable row level security;
-
-create policy "Allow public read" on scores for select using (true);
-create policy "Allow public insert" on scores for insert with check (true);
-```
-
-3. `.env.example` dosyasını `.env` olarak kopyalayın (veya proje kökündeki `.env` dosyasını düzenleyin):
+1. Supabase instance hazırlayın (ör. `https://supabase-vlragent.fjorterminal.com`)
+2. **SQL Editor** → [`supabase/schema.sql`](supabase/schema.sql) dosyasının tamamını çalıştırın (`scores` + `rooms` tabloları)
+3. `.env.example` → `.env` kopyalayın ve anahtarları doldurun:
 
 ```
-NEXT_PUBLIC_SUPABASE_URL=https://bzrdvlbplvwyiuiakynx.supabase.co
-NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=your-publishable-key
+NEXT_PUBLIC_SUPABASE_URL=https://supabase-vlragent.fjorterminal.com
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
 ```
 
-> Bu proje Vite kullanır; `NEXT_PUBLIC_` öneki `vite.config.js` içinde tanımlıdır. Eski `VITE_SUPABASE_*` isimleri de desteklenir.
+> `NEXT_PUBLIC_` öneki Vite'ta tanımlıdır. Eski `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` ve `VITE_SUPABASE_*` isimleri de desteklenir.
 
 Supabase yapılandırılmazsa skorlar otomatik olarak `localStorage`'a kaydedilir.
 
-Kapışma modu için ek olarak [`supabase/rooms.sql`](supabase/rooms.sql) dosyasını SQL Editor'de çalıştırın ve **Realtime**'da `rooms` tablosunu etkinleştirin.
+Kapışma modu Realtime **Broadcast** kullanır; `rooms` tablosunun Replication listesinde olması gerekmez.
+
+Mevcut veritabanına yeniden bağlanma desteği eklemek için bir kez [`supabase/migration_room_sync.sql`](supabase/migration_room_sync.sql) çalıştırın.
 
 ## Ses Dosyaları
 

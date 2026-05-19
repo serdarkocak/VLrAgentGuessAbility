@@ -6,6 +6,7 @@ export default function Lobby({
   isHost,
   minPlayers,
   maxPlayers,
+  syncing = false,
   onStart,
   onLeave,
 }) {
@@ -69,7 +70,9 @@ export default function Lobby({
           </button>
         )}
         {!isHost && (
-          <p className="text-center text-sm text-white/50">{t('battle.waitingHost')}</p>
+          <p className="text-center text-sm text-white/50">
+            {syncing ? t('battle.syncing') : t('battle.waitingHost')}
+          </p>
         )}
         <button type="button" className="btn-secondary w-full" onClick={onLeave}>
           {t('battle.leave')}

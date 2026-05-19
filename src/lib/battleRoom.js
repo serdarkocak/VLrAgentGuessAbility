@@ -1,7 +1,9 @@
 import { supabase } from './supabase.js';
 import { generateRoomCode } from './roomCode.js';
 import { buildBattleQuestionList } from './battleQuestions.js';
-import { BATTLE_TOTAL_ROUNDS } from './battleConstants.js';
+import { BATTLE_TOTAL_ROUNDS, ROOM_IDLE_MS } from './battleConstants.js';
+
+export { ROOM_IDLE_MS };
 
 function channelName(code) {
   return `room:${code}`;
@@ -40,6 +42,30 @@ export async function fetchRoom(code) {
 export async function updateRoomStatus(code, status) {
   if (!supabase) return { error: new Error('Supabase not configured') };
   return supabase.from('rooms').update({ status }).eq('code', code);
+}
+
+export async function updateRoomState(code, patch) {
+  if (!supabase) return { error: new Error('Supabase not configured') };
+  const { error } = await supabase.from('rooms').update(patch).eq('code', code);
+  return { error };
+}
+
+export async function cleanupStaleRooms() {
+  if (!supabase) return;
+  const cutoff = new Date(Date.now() - ROOM_IDLE_MS).toISOString();
+  await supabase
+    .from('rooms')
+    .delete()
+    .lt('last_activity_at', cutoff)
+    .neq('status', 'finished');
+}
+
+export async function touchRoomActivity(code) {
+  if (!supabase || !code) return;
+  return supabase
+    .from('rooms')
+    .update({ last_activity_at: new Date().toISOString() })
+    .eq('code', code);
 }
 
 export function connectToRoom({ code, playerId, playerName, isHost, handlers }) {
@@ -97,6 +123,12 @@ export function connectToRoom({ code, playerId, playerName, isHost, handlers }) 
     })
     .on('broadcast', { event: 'game_over' }, ({ payload }) => {
       handlers.onGameOver?.(payload);
+    })
+    .on('broadcast', { event: 'request_sync' }, ({ payload }) => {
+      handlers.onRequestSync?.(payload);
+    })
+    .on('broadcast', { event: 'state_sync' }, ({ payload }) => {
+      handlers.onStateSync?.(payload);
     })
     .subscribe(async (status) => {
       if (status === 'SUBSCRIBED') {
