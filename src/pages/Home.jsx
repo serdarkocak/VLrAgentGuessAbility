@@ -139,21 +139,32 @@ export default function Home() {
       </motion.button>
 
       {/* ── BATTLE BUTTON (glass) ──────────────────────────── */}
-      <motion.button
-        type="button"
-        onClick={() => isSupabaseConfigured && navigate('/battle')}
-        disabled={!isSupabaseConfigured}
-        title={!isSupabaseConfigured ? t('battle.supabaseRequired') : undefined}
-        whileHover={isSupabaseConfigured ? { scale: 1.01 } : {}}
-        whileTap={isSupabaseConfigured ? { scale: 0.98 } : {}}
-        className={`flex w-full items-center justify-center gap-2 rounded-2xl border py-4 text-xl font-valorant tracking-wider backdrop-blur-xl transition ${
-          isSupabaseConfigured
-            ? 'border-neon-purple/40 bg-white/[0.04] text-white hover:border-neon-purple/70 hover:bg-neon-purple/10 hover:shadow-glow-purple'
-            : 'cursor-not-allowed border-white/10 bg-white/[0.02] text-white/30'
-        }`}
-      >
-        <span className="text-2xl">⚔</span> {t('battle.title')}
-      </motion.button>
+      <div className="w-full flex flex-col gap-2">
+        <motion.button
+          type="button"
+          onClick={() => isSupabaseConfigured && navigate('/battle')}
+          disabled={!isSupabaseConfigured}
+          title={!isSupabaseConfigured ? t('battle.supabaseRequired') : undefined}
+          whileHover={isSupabaseConfigured ? { scale: 1.01 } : {}}
+          whileTap={isSupabaseConfigured ? { scale: 0.98 } : {}}
+          className={`flex w-full items-center justify-center gap-2 rounded-2xl border py-4 text-xl font-valorant tracking-wider backdrop-blur-xl transition ${
+            isSupabaseConfigured
+              ? 'border-neon-purple/40 bg-white/[0.04] text-white hover:border-neon-purple/70 hover:bg-neon-purple/10 hover:shadow-glow-purple'
+              : 'cursor-not-allowed border-white/10 bg-white/[0.02] text-white/30'
+          }`}
+        >
+          <span className="text-2xl">⚔</span> {t('battle.title')}
+        </motion.button>
+        {isSupabaseConfigured ? (
+          <p className="text-center text-xs text-neon-purple/70 tracking-wider font-semibold">
+            👥 {t('battle.subtitle')}
+          </p>
+        ) : (
+          <p className="text-center text-[11px] text-white/30 tracking-wider">
+            🔒 {t('battle.supabaseRequired')}
+          </p>
+        )}
+      </div>
 
       <button
         type="button"

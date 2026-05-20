@@ -1,4 +1,5 @@
 import { AGENT_IDS, ABILITY_SLOTS } from './agents.js';
+import soundMapping from './soundMapping.json';
 
 /**
  * Ses dosyası olmayan kombinasyonlar (AbilitySounds klasörüne göre).
@@ -18,10 +19,12 @@ function buildQuestionPool() {
     for (const slot of ABILITY_SLOTS) {
       const key = `${agentId}_${slot}`;
       if (MISSING_SOUNDS.has(key)) continue;
+      
+      const hash = soundMapping[key];
       pool.push({
         agentId,
         slot,
-        soundPath: `/sounds/${agentId}_${slot}.mp3`,
+        soundPath: `/sounds/${hash}.mp3`,
         key,
       });
     }
@@ -34,7 +37,8 @@ export const QUESTION_POOL = buildQuestionPool();
 export function getSoundPath(agentId, slot) {
   const key = `${agentId}_${slot}`;
   if (MISSING_SOUNDS.has(key)) return null;
-  return `/sounds/${agentId}_${slot}.mp3`;
+  const hash = soundMapping[key];
+  return `/sounds/${hash}.mp3`;
 }
 
 export function hasSound(agentId, slot) {

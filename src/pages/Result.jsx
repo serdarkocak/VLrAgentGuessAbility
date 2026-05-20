@@ -108,6 +108,7 @@ export default function Result() {
         total={total}
         mode={mode}
         difficulty={difficulty}
+        nickname={nickname}
       />
 
       {history.length > 0 && (

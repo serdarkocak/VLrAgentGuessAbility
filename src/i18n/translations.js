@@ -498,4 +498,4 @@ export const translations = {
 };
 
 export const LOCALES = ['tr', 'en'];
-export const DEFAULT_LOCALE = 'tr';
+export const DEFAULT_LOCALE = 'en';
