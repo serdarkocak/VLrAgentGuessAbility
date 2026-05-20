@@ -1,4 +1,6 @@
 import { useLanguage } from '../../i18n/LanguageContext.jsx';
+import { getBattleInviteLink } from '../../lib/battleInviteUrl.js';
+import CopyButton from '../CopyButton.jsx';
 
 export default function Lobby({
   roomCode,
@@ -11,11 +13,10 @@ export default function Lobby({
   onLeave,
 }) {
   const { t } = useLanguage();
-  const canStart = isHost && players.length >= minPlayers;
+  const canStart =
+    isHost && players.length >= minPlayers && players.length <= maxPlayers;
 
-  const copyCode = () => {
-    navigator.clipboard?.writeText(roomCode);
-  };
+  const inviteLink = getBattleInviteLink(roomCode);
 
   return (
     <div className="mx-auto max-w-md space-y-6">
@@ -23,15 +24,23 @@ export default function Lobby({
         <p className="text-xs uppercase tracking-widest text-white/40">{t('battle.roomCode')}</p>
         <div className="mt-2 flex items-center justify-center gap-3">
           <span className="font-valorant text-5xl tracking-[0.3em] text-valorant-red">{roomCode}</span>
-          <button
-            type="button"
-            onClick={copyCode}
+          <CopyButton
+            value={roomCode}
+            ariaLabel={t('battle.copy')}
             className="rounded-sm border border-white/20 px-3 py-1 text-sm hover:border-valorant-red"
           >
             {t('battle.copy')}
-          </button>
+          </CopyButton>
         </div>
         <p className="mt-2 text-sm text-white/50">{t('battle.shareCode')}</p>
+        <p className="mt-1 text-xs text-white/40">{t('battle.inviteLink')}</p>
+        <CopyButton
+          value={inviteLink}
+          ariaLabel={t('battle.copyInviteLink')}
+          className="mt-2 rounded-sm border border-white/20 px-4 py-2 text-sm hover:border-valorant-red"
+        >
+          {t('battle.copyInviteLink')}
+        </CopyButton>
       </div>
 
       <div className="card-panel p-4">

@@ -68,6 +68,9 @@ export function useBattleRoom() {
   const lastRoundResultRef = useRef(null);
   const pendingRejoinRef = useRef(false);
   const questionIndexRef = useRef(0);
+  /** Supabase presence sync can fire once with an empty list before track() completes; never abandon on that. */
+  const prevPresenceCountRef = useRef(0);
+  const leaveRoomRef = useRef(() => {});
 
   const persistRoomState = useCallback((patch) => {
     if (!roomCodeRef.current) return;
@@ -278,6 +281,7 @@ export function useBattleRoom() {
       setIsHost(host);
       setRoomCode(code);
       roomCodeRef.current = code;
+      prevPresenceCountRef.current = 0;
       pendingRejoinRef.current = rejoin;
       localStorage.setItem('vq-nickname', name);
 
@@ -303,8 +307,30 @@ export function useBattleRoom() {
           playersRef.current = list;
           setPlayers(list);
 
+          if (phaseRef.current === 'lobby' && list.length > BATTLE_MAX_PLAYERS) {
+            const sorted = [...list].sort((a, b) =>
+              a.joinedAt !== b.joinedAt
+                ? a.joinedAt - b.joinedAt
+                : String(a.id).localeCompare(String(b.id)),
+            );
+            const allowedIds = new Set(
+              sorted.slice(0, BATTLE_MAX_PLAYERS).map((p) => p.id),
+            );
+            if (!allowedIds.has(playerIdRef.current)) {
+              queueMicrotask(() => {
+                setError('roomFull');
+                leaveRoomRef.current?.();
+              });
+              return;
+            }
+          }
+
+          const hadPresenceBefore = prevPresenceCountRef.current > 0;
+          prevPresenceCountRef.current = list.length;
+
           if (
             list.length === 0 &&
+            hadPresenceBefore &&
             roomCodeRef.current &&
             phaseRef.current !== 'final' &&
             phaseRef.current !== 'entry'
@@ -449,7 +475,13 @@ export function useBattleRoom() {
   );
 
   const startGame = useCallback(async () => {
-    if (!isHostRef.current || players.length < BATTLE_MIN_PLAYERS) return;
+    if (
+      !isHostRef.current ||
+      players.length < BATTLE_MIN_PLAYERS ||
+      players.length > BATTLE_MAX_PLAYERS
+    ) {
+      return;
+    }
 
     const keys =
       questionKeysRef.current.length > 0
@@ -504,6 +536,7 @@ export function useBattleRoom() {
   const leaveRoom = useCallback(() => {
     connRef.current?.unsubscribe();
     connRef.current = null;
+    prevPresenceCountRef.current = 0;
     setPhase('entry');
     setRoomCode('');
     roomCodeRef.current = '';
@@ -513,6 +546,10 @@ export function useBattleRoom() {
     setFinalScores([]);
     setIsSyncing(false);
   }, [syncScores]);
+
+  useEffect(() => {
+    leaveRoomRef.current = leaveRoom;
+  }, [leaveRoom]);
 
   useEffect(() => {
     return () => connRef.current?.unsubscribe();

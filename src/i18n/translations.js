@@ -5,6 +5,9 @@ export const translations = {
       exit: '← Çıkış',
       home: 'Ana Sayfa',
     },
+    common: {
+      copied: 'Kopyalandı',
+    },
     footer: {
       privacy: 'Gizlilik Politikası',
     },
@@ -118,7 +121,7 @@ export const translations = {
       replay: 'Tekrar çal',
     },
     battle: {
-      title: 'KAPİŞMA',
+      title: 'KAPIŞMA',
       subtitle: 'Oda kur veya katıl — ilk doğru cevap kazanır',
       nickname: 'Takma adın',
       createRoom: 'Oda Kur',
@@ -127,6 +130,15 @@ export const translations = {
       roomCode: 'Oda Kodu',
       copy: 'Kopyala',
       shareCode: 'Arkadaşlarına bu kodu gönder',
+      inviteLink: 'Veya davet linkini paylaş — tıklayanlar doğrudan bu odaya gelir',
+      copyInviteLink: 'Davet linkini kopyala',
+      inviteJoinSubtitle:
+        'Davet linkiyle geldin. Sadece takma adını yaz ve aşağıdan odaya bağlan.',
+      joinInviteCta: 'Odaya bağlan',
+      createRoomInstead: 'Kendi odanı kurmak için buraya tıkla',
+      inviteInvalidCode:
+        'Bu davet linkindeki oda kodu geçerli değil. Arkadaşından yeni link iste veya Kapışma sayfasından kodla katıl.',
+      roomFull: 'Oda dolu (en fazla 10 oyuncu).',
       players: 'Oyuncular',
       host: 'Host',
       waitingPlayers: 'En az {{n}} oyuncu gerekli',
@@ -240,6 +252,9 @@ export const translations = {
       leaderboard: 'Leaderboard',
       exit: '← Exit',
       home: 'Home',
+    },
+    common: {
+      copied: 'Copied',
     },
     footer: {
       privacy: 'Privacy Policy',
@@ -363,6 +378,15 @@ export const translations = {
       roomCode: 'Room Code',
       copy: 'Copy',
       shareCode: 'Share this code with friends',
+      inviteLink: 'Or share the invite link — friends open it and land in this room',
+      copyInviteLink: 'Copy invite link',
+      inviteJoinSubtitle:
+        "You're joining via an invite. Enter your nickname and connect to the room below.",
+      joinInviteCta: 'Connect to room',
+      createRoomInstead: 'Create your own room instead',
+      inviteInvalidCode:
+        'This invite link does not contain a valid room code. Ask your friend for a new link or join with a code from the Battle page.',
+      roomFull: 'Room is full (maximum 10 players).',
       players: 'Players',
       host: 'Host',
       waitingPlayers: 'At least {{n}} players required',

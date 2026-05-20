@@ -43,7 +43,7 @@ Faz 3 — Sosyal & Rekabet
 
 ### Ne işe yarar?
 
-Kapışma modu, tek başına oynanan klasik modun aksine **aynı odada 2–8 oyuncunun** aynı anda aynı yetenek sesini dinleyip **ilk doğru cevabı** vermeye çalıştığı gerçek zamanlı yarışma modudur. Ek sunucu gerekmez; tüm senkronizasyon **Supabase Realtime** (Broadcast + Presence) üzerinden yapılır.
+Kapışma modu, tek başına oynanan klasik modun aksine **aynı odada 2–10 oyuncunun** aynı anda aynı yetenek sesini dinleyip **ilk doğru cevabı** vermeye çalıştığı gerçek zamanlı yarışma modudur. Ek sunucu gerekmez; tüm senkronizasyon **Supabase Realtime** (Broadcast + Presence) üzerinden yapılır.
 
 | Özellik | Açıklama |
 |--------|----------|
@@ -108,7 +108,7 @@ Ana Sayfa → KAPİŞMA
 
 ### Lobi ve bağlantı
 
-- Min **2**, max **8** oyuncu
+- Min **2**, max **10** oyuncu
 - Sadece host **Oyunu Başlat** görür
 - Host ayrılırsa presence sırasındaki ilk oyuncu host olur (`host_changed` broadcast)
 - Bağlantı kopan oyuncunun skoru sıfırlanmaz; yeniden katılırsa devam eder

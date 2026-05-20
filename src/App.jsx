@@ -15,6 +15,7 @@ export default function App() {
         <Route path="/play" element={<Game />} />
         <Route path="/result" element={<Result />} />
         <Route path="/leaderboard" element={<Leaderboard />} />
+        <Route path="/battle/join/:roomCode" element={<BattleRoom />} />
         <Route path="/battle" element={<BattleRoom />} />
         <Route path="/privacy" element={<Privacy />} />
       </Routes>
