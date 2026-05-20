@@ -328,12 +328,14 @@ export function useBattleRoom() {
           const hadPresenceBefore = prevPresenceCountRef.current > 0;
           prevPresenceCountRef.current = list.length;
 
+          // Do not mark abandoned from empty presence in lobby — Realtime often
+          // emits a transient empty sync after a non-empty one; DB would flip to
+          // abandoned while the host is still there. Mid-game abandonment only.
           if (
             list.length === 0 &&
             hadPresenceBefore &&
             roomCodeRef.current &&
-            phaseRef.current !== 'final' &&
-            phaseRef.current !== 'entry'
+            (phaseRef.current === 'playing' || phaseRef.current === 'roundResult')
           ) {
             void updateRoomState(roomCodeRef.current, {
               status: 'abandoned',
