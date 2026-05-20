@@ -73,7 +73,7 @@ export function useGameLogic({ mode, difficulty }) {
 
       setHintsUsed((h) => h + 1);
       setRevealedHints((prev) => [...prev, hintType]);
-      setScore((s) => Math.max(0, s - HINT_COST));
+      setScore((s) => s - HINT_COST);
 
       const agent = getAgent(currentQuestion.agentId);
       if (hintType === 'role') return { type: 'role', value: agent?.role };

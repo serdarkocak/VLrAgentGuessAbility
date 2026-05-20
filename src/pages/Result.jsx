@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { AGENTS } from '../data/agents.js';
+import { HINT_COST } from '../data/abilities.js';
 import { saveScore } from '../lib/scores.js';
 import ShareCard from '../components/ShareCard.jsx';
 import { useLanguage } from '../i18n/LanguageContext.jsx';
@@ -27,7 +28,9 @@ export default function Result() {
     );
   }
 
-  const { score, correct, total, mode, difficulty, history = [], timedBonus = 0 } = state;
+  const { score, correct, total, mode, difficulty, history = [], hintsUsed = 0, timedBonus = 0 } =
+    state;
+  const hintPenalty = hintsUsed * HINT_COST;
   const finalScore = score + (timedBonus || 0);
   const accuracy = total > 0 ? Math.round((correct / total) * 100) : 0;
 
@@ -63,6 +66,12 @@ export default function Result() {
         </p>
         <p className="mt-1 text-sm text-white/40">
           {tMode(mode)} · {tDifficulty(difficulty)}
+          {hintPenalty > 0 && (
+            <>
+              {' · '}
+              {t('result.hintPenalty', { n: hintPenalty })}
+            </>
+          )}
           {timedBonus > 0 && t('result.timeBonus', { n: timedBonus })}
         </p>
       </section>

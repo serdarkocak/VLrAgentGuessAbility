@@ -70,11 +70,12 @@ export default function Game() {
         mode,
         difficulty,
         history,
+        hintsUsed,
         timedBonus: mode === 'timed' ? countdown.seconds * 2 : 0,
       },
       replace: true,
     });
-  }, [isFinished, score, correctCount, history, mode, difficulty, navigate, stop, countdown.seconds]);
+  }, [isFinished, score, correctCount, history, hintsUsed, mode, difficulty, navigate, stop, countdown.seconds]);
 
   /* ── Reset per question ──────────────────────────────────────── */
   useEffect(() => {

@@ -5,7 +5,9 @@ export const translations = {
       exit: '← Çıkış',
       home: 'Ana Sayfa',
     },
-    footer: 'Valorant ile resmi bağlantısı yoktur.',
+    footer: {
+      privacy: 'Gizlilik Politikası',
+    },
     home: {
       title1: 'YETENEK SESİ',
       title2: 'TAHMİN OYUNU',
@@ -55,6 +57,9 @@ export const translations = {
       selectBoth: 'Ajan ve yetenek seç',
       selectAbility: 'Şimdi yeteneği seç →',
       selectAgent: 'Şimdi ajanı seç →',
+      searchAgent: 'Ajan ara…',
+      clearSearch: 'Aramayı temizle',
+      noAgentMatch: 'Eşleşen ajan bulunamadı',
       listen: '← Dinle',
       hint: 'İpucu',
       hintPoints: '−{{n}} puan',
@@ -77,6 +82,7 @@ export const translations = {
       roundEnd: 'Tur Bitti',
       correctCount: '{{correct}} doğru / {{total}} soru — %{{accuracy}} başarı',
       timeBonus: ' · Zaman bonusu: +{{n}}',
+      hintPenalty: 'İpucu cezası: −{{n}}',
       saveScore: 'Skoru Kaydet',
       nicknamePlaceholder: 'Takma ad (max 20)',
       saveToLeaderboard: 'Sıralamaya Kaydet',
@@ -141,6 +147,82 @@ export const translations = {
       expired: 'Oda süresi doldu veya kapatıldı',
       notFound: 'Oda bulunamadı',
     },
+    legal: {
+      riotDisclaimer:
+        'Bu proje, Riot Games\'e ait varlıklar kullanılarak Riot Games\'in "Legal Jibber Jabber" politikası kapsamında oluşturulmuştur. Riot Games bu projeyi onaylamaz veya sponsorlamaz.',
+      riotPolicyLink: 'Riot Games Fan Content Politikası',
+      privacy: {
+        title: 'Gizlilik Politikası',
+        lastUpdated: 'Son güncelleme: 20 Mayıs 2026',
+        intro:
+          'Valorant Ability Sound Quiz\'e hoş geldiniz. Bu sayfa, sitemiz aracılığıyla toplanan bilgilerin nasıl kullanıldığını ve saklandığını açıklar. Kişisel verilerinizi korumaya önem veriyoruz.',
+        contactTitle: 'İletişim',
+        contactBody: 'Gizlilik politikası hakkında sorularınız için:',
+        contactNoEmail: 'İletişim e-postası henüz yapılandırılmamış. Site yöneticisi VITE_CONTACT_EMAIL ortam değişkenini ekleyebilir.',
+        sections: [
+          {
+            title: '1. Toplanan bilgiler',
+            body: 'Hesap oluşturmanız gerekmez. Aşağıdaki veriler oyun deneyimi için işlenebilir:',
+            list: [
+              'Takma ad (nickname) — skor tablosuna kayıt ve kapışma odasında görünen isim',
+              'Oyun skorları, mod, zorluk ve doğru cevap sayısı',
+              'Tarayıcıda saklanan dil tercihi ve yerel skorlar (localStorage)',
+              'Kapışma modunda oda kodu ve oyuncu durumu (Supabase yapılandırıldıysa)',
+              'Teknik veriler: IP adresi yalnızca barındırma/veritabanı sağlayıcısı loglarında görülebilir',
+            ],
+          },
+          {
+            title: '2. Üçüncü taraf hizmetler',
+            body: 'Site şu harici hizmetleri kullanabilir:',
+            list: [
+              'Supabase — global skor tablosu ve çok oyunculu kapışma odaları (yapılandırıldıysa)',
+              'valorant-api.com — ajan görselleri ve yetenek ikonları',
+              'Google Fonts — yazı tipleri',
+              'Barındırma sağlayıcınız (ör. Coolify) — siteyi sunar',
+              'Reklam ağları (ör. Google AdSense) — yalnızca reklam entegrasyonu eklendiğinde; yan panellerde gösterim için',
+            ],
+          },
+          {
+            title: '3. Çerezler ve yerel depolama',
+            body: 'Şu an zorunlu olmayan reklam veya analitik çerezleri kullanılmıyor. Tarayıcı localStorage ile dil seçimi, takma ad ve yerel skorlar saklanabilir. Yan sidebar reklamları eklendiğinde reklam ortağı çerezleri devreye girebilir; o zaman bu bölüm ve “Üçüncü taraf” listesi güncellenecektir. Yerel verileri tarayıcı ayarlarından silebilirsiniz.',
+          },
+          {
+            title: '4. Verilerin kullanımı',
+            list: [
+              'Oyun ve skor tablosu işlevselliği',
+              'Çok oyunculu kapışma senkronizasyonu',
+              'Dil tercihinin hatırlanması',
+              'Hizmet güvenliği ve kötüye kullanımın önlenmesi',
+              'Reklam gösterimi (yalnızca reklam entegrasyonu aktif olduğunda)',
+            ],
+          },
+          {
+            title: '5. Haklarınız',
+            list: [
+              'Tarayıcı depolamasını temizleyerek yerel verileri silme',
+              'Global skor kaydının kaldırılması için bizimle iletişime geçme',
+              'Reklam eklendiğinde: tarayıcı veya reklam sağlayıcısı ayarlarından kişiselleştirilmiş reklamları reddetme (sağlayıcıya göre değişir)',
+            ],
+          },
+          {
+            title: '6. Veri güvenliği',
+            body: 'Veriler makul teknik önlemlerle korunur. Supabase üzerinden iletilen veriler HTTPS ile şifrelenir. Hiçbir sistem %100 güvenli değildir.',
+          },
+          {
+            title: '7. Üçüncü taraf gizlilik politikaları',
+            links: [
+              { label: 'Riot Games — Yasal & Fan Content', href: 'https://www.riotgames.com/en/legal' },
+              { label: 'Supabase Gizlilik Politikası', href: 'https://supabase.com/privacy' },
+              { label: 'Google Gizlilik Politikası', href: 'https://policies.google.com/privacy' },
+            ],
+          },
+          {
+            title: '8. Politika değişiklikleri',
+            body: 'Bu politikayı zaman zaman güncelleyebiliriz. Değişiklikler bu sayfada yayımlandığı anda geçerli olur.',
+          },
+        ],
+      },
+    },
     diagnostics: {
       title: '🔧 Supabase teşhis',
       runtimeUrl: 'Runtime URL',
@@ -159,7 +241,9 @@ export const translations = {
       exit: '← Exit',
       home: 'Home',
     },
-    footer: 'Not affiliated with Valorant.',
+    footer: {
+      privacy: 'Privacy Policy',
+    },
     home: {
       title1: 'ABILITY SOUND',
       title2: 'GUESS GAME',
@@ -209,6 +293,9 @@ export const translations = {
       selectBoth: 'Select agent and ability',
       selectAbility: 'Now pick ability →',
       selectAgent: 'Now pick agent →',
+      searchAgent: 'Search agent…',
+      clearSearch: 'Clear search',
+      noAgentMatch: 'No matching agent',
       listen: '← Listen',
       hint: 'Hint',
       hintPoints: '−{{n}} pts',
@@ -231,6 +318,7 @@ export const translations = {
       roundEnd: 'Round Over',
       correctCount: '{{correct}} correct / {{total}} questions — {{accuracy}}% accuracy',
       timeBonus: ' · Time bonus: +{{n}}',
+      hintPenalty: 'Hint penalty: −{{n}}',
       saveScore: 'Save Score',
       nicknamePlaceholder: 'Nickname (max 20)',
       saveToLeaderboard: 'Save to Leaderboard',
@@ -294,6 +382,82 @@ export const translations = {
       supabaseRequired: 'Battle mode requires Supabase.',
       expired: 'Room expired or was closed',
       notFound: 'Room not found',
+    },
+    legal: {
+      riotDisclaimer:
+        'This project was created under Riot Games\' "Legal Jibber Jabber" policy using assets owned by Riot Games. Riot Games does not endorse or sponsor this project.',
+      riotPolicyLink: 'Riot Games Fan Content Policy',
+      privacy: {
+        title: 'Privacy Policy',
+        lastUpdated: 'Last updated: May 20, 2026',
+        intro:
+          'Welcome to Valorant Ability Sound Quiz. This page explains how information is collected, used, and stored when you use our website. We are committed to protecting your privacy.',
+        contactTitle: 'Contact',
+        contactBody: 'For questions about this privacy policy:',
+        contactNoEmail: 'No contact email is configured yet. The site operator can set the VITE_CONTACT_EMAIL environment variable.',
+        sections: [
+          {
+            title: '1. Information we collect',
+            body: 'You do not need to create an account. We may process the following data to run the game:',
+            list: [
+              'Nickname — shown on the leaderboard and in battle rooms',
+              'Game scores, mode, difficulty, and correct answer count',
+              'Language preference and local scores stored in your browser (localStorage)',
+              'Battle room code and player state when Supabase is configured',
+              'Technical data: IP address may appear in hosting/database provider logs only',
+            ],
+          },
+          {
+            title: '2. Third-party services',
+            body: 'The site may use these external services:',
+            list: [
+              'Supabase — global leaderboard and multiplayer battle rooms (when configured)',
+              'valorant-api.com — agent portraits and ability icons',
+              'Google Fonts — web fonts',
+              'Your hosting provider (e.g. Coolify) — serves the application',
+              'Ad networks (e.g. Google AdSense) — only when ad integration is enabled; sidebar display',
+            ],
+          },
+          {
+            title: '3. Cookies and local storage',
+            body: 'We do not currently use non-essential advertising or analytics cookies. The browser may store language, nickname, and local scores via localStorage. When sidebar ads are added, ad partners may set their own cookies; this section and the third-party list will be updated. You can clear local data in your browser settings.',
+          },
+          {
+            title: '4. How we use data',
+            list: [
+              'Game and leaderboard functionality',
+              'Multiplayer battle synchronization',
+              'Remembering your language preference',
+              'Service security and abuse prevention',
+              'Serving advertisements (only when ad integration is active)',
+            ],
+          },
+          {
+            title: '5. Your rights',
+            list: [
+              'Clear local data via browser storage settings',
+              'Contact us to request removal of a global leaderboard entry',
+              'When ads are enabled: opt out of personalized ads via browser or ad provider settings (varies by provider)',
+            ],
+          },
+          {
+            title: '6. Data security',
+            body: 'Data is protected with reasonable technical measures. Data sent to Supabase is encrypted in transit (HTTPS). No system is 100% secure.',
+          },
+          {
+            title: '7. Third-party privacy policies',
+            links: [
+              { label: 'Riot Games — Legal & Fan Content', href: 'https://www.riotgames.com/en/legal' },
+              { label: 'Supabase Privacy Policy', href: 'https://supabase.com/privacy' },
+              { label: 'Google Privacy Policy', href: 'https://policies.google.com/privacy' },
+            ],
+          },
+          {
+            title: '8. Changes to this policy',
+            body: 'We may update this policy from time to time. Changes take effect when posted on this page.',
+          },
+        ],
+      },
     },
     diagnostics: {
       title: '🔧 Supabase diagnostics',

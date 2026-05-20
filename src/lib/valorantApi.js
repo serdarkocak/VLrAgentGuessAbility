@@ -1,4 +1,5 @@
 import { AGENTS } from '../data/agents.js';
+import { MANUAL_AGENT_ASSETS } from '../data/manualAgentAssets.js';
 
 const API_BASE = 'https://valorant-api.com/v1';
 const cache = new Map();
@@ -6,8 +7,6 @@ const cache = new Map();
 /** Local id -> API displayName overrides */
 const API_NAME_MAP = {
   kayo: 'KAY/O',
-  miks: null,
-  veto: null,
 };
 
 function normalizeName(name) {
@@ -39,15 +38,20 @@ export async function getAgentImage(agentId) {
   const local = AGENTS[agentId];
   if (!local) return null;
 
-  const apiOverride = API_NAME_MAP[agentId];
-  if (apiOverride === null) {
-    const placeholder = buildPlaceholder(agentId, local.name);
-    cache.set(`img:${agentId}`, placeholder);
-    return placeholder;
+  const manual = MANUAL_AGENT_ASSETS[agentId];
+  if (manual) {
+    const result = {
+      displayName: local.name,
+      fullPortrait: manual.portrait,
+      role: local.role,
+      background: null,
+    };
+    cache.set(`img:${agentId}`, result);
+    return result;
   }
 
   const byNorm = await fetchAgentsMetadata();
-  const lookupName = apiOverride ?? local.apiName ?? local.name;
+  const lookupName = API_NAME_MAP[agentId] ?? local.apiName ?? local.name;
   const apiAgent = byNorm[normalizeName(lookupName)];
 
   const result = apiAgent
@@ -98,14 +102,14 @@ export async function getAgentAbilityIcons(agentId) {
   const local = AGENTS[agentId];
   if (!local) return null;
 
-  const apiOverride = API_NAME_MAP[agentId];
-  if (apiOverride === null) {
-    cache.set(`abilities:${agentId}`, null);
-    return null;
+  const manual = MANUAL_AGENT_ASSETS[agentId];
+  if (manual?.abilities) {
+    cache.set(`abilities:${agentId}`, manual.abilities);
+    return manual.abilities;
   }
 
   const byNorm = await fetchAgentsMetadata();
-  const lookupName = apiOverride ?? local.apiName ?? local.name;
+  const lookupName = API_NAME_MAP[agentId] ?? local.apiName ?? local.name;
   const apiAgent = byNorm[normalizeName(lookupName)];
 
   if (!apiAgent?.abilities) {

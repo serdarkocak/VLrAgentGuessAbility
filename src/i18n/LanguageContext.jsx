@@ -35,6 +35,7 @@ export function LanguageProvider({ children }) {
   const t = useCallback(
     (key, params) => {
       const value = getNested(translations[locale], key) ?? getNested(translations[DEFAULT_LOCALE], key) ?? key;
+      if (value !== null && typeof value === 'object') return value;
       return interpolate(value, params);
     },
     [locale],

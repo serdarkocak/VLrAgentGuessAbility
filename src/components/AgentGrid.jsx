@@ -1,7 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
 import { AGENTS } from '../data/agents.js';
 import { getAgentImage } from '../lib/valorantApi.js';
+import { useLanguage } from '../i18n/LanguageContext.jsx';
+
+const SEARCH_MIN_AGENTS = 10;
 
 function AgentCard({ agentId, selected, correct, wrong, onSelect, disabled }) {
   const [portrait, setPortrait] = useState(null);
@@ -12,16 +15,10 @@ function AgentCard({ agentId, selected, correct, wrong, onSelect, disabled }) {
     getAgentImage(agentId).then((data) => {
       if (!cancelled) setPortrait(data?.fullPortrait ?? null);
     });
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [agentId]);
-
-  const borderClass = correct
-    ? 'border-green-500 shadow-glow-green scale-[1.04]'
-    : wrong
-    ? 'border-valorant-red opacity-60'
-    : selected
-    ? 'agent-card selected'
-    : 'agent-card';
 
   return (
     <motion.button
@@ -40,19 +37,17 @@ function AgentCard({ agentId, selected, correct, wrong, onSelect, disabled }) {
           loading="lazy"
         />
       ) : (
-        <div className="flex h-full w-full items-center justify-center bg-valorant-gray/80">
+        <motion.div className="flex h-full w-full items-center justify-center bg-valorant-gray/80">
           <span className="font-valorant text-3xl text-valorant-red">{agent.name.charAt(0)}</span>
-        </div>
+        </motion.div>
       )}
 
-      {/* Name overlay */}
       <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/95 via-black/50 to-transparent pb-1.5 pt-4">
         <p className="text-center font-valorant text-sm leading-none text-white drop-shadow">
           {agent.name}
         </p>
       </div>
 
-      {/* Selected highlight ring */}
       {selected && !correct && !wrong && (
         <motion.div
           layoutId="agent-ring"
@@ -69,29 +64,96 @@ function AgentCard({ agentId, selected, correct, wrong, onSelect, disabled }) {
   );
 }
 
-export default function AgentGrid({ agentIds, selectedAgent, correctAgent, onSelect, disabled }) {
+function filterAgentIds(agentIds, query) {
+  const q = query.trim().toLowerCase();
+  if (!q) return agentIds;
+  return agentIds.filter((id) => {
+    const name = AGENTS[id]?.name ?? id;
+    return name.toLowerCase().includes(q) || id.toLowerCase().includes(q);
+  });
+}
+
+export default function AgentGrid({
+  agentIds,
+  selectedAgent,
+  correctAgent,
+  onSelect,
+  disabled,
+  showSearch,
+}) {
+  const { t } = useLanguage();
+  const [query, setQuery] = useState('');
+  const searchable = showSearch ?? agentIds.length >= SEARCH_MIN_AGENTS;
+
+  const agentIdsKey = agentIds.join(',');
+  useEffect(() => {
+    setQuery('');
+  }, [agentIdsKey]);
+
+  const visibleIds = useMemo(
+    () => (searchable ? filterAgentIds(agentIds, query) : agentIds),
+    [agentIds, query, searchable],
+  );
+
   const cols =
-    agentIds.length <= 4
+    visibleIds.length <= 4
       ? 'grid-cols-4'
-      : agentIds.length <= 6
-      ? 'grid-cols-3 sm:grid-cols-6'
-      : agentIds.length <= 8
-      ? 'grid-cols-4'
-      : 'grid-cols-4 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-7';
+      : visibleIds.length <= 6
+        ? 'grid-cols-3 sm:grid-cols-6'
+        : visibleIds.length <= 8
+          ? 'grid-cols-4'
+          : 'grid-cols-4 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-7';
 
   return (
-    <div className={`grid gap-2 ${cols}`}>
-      {agentIds.map((id) => (
-        <AgentCard
-          key={id}
-          agentId={id}
-          selected={selectedAgent === id}
-          correct={correctAgent === id}
-          wrong={disabled && selectedAgent === id && correctAgent && selectedAgent !== correctAgent}
-          onSelect={onSelect}
-          disabled={disabled}
-        />
-      ))}
+    <div className="space-y-3">
+      {searchable && (
+        <div className="relative">
+          <input
+            type="search"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder={t('game.searchAgent')}
+            disabled={disabled}
+            className="w-full rounded-sm border border-white/20 bg-valorant-dark py-2.5 pl-10 pr-4 text-white placeholder:text-white/30 focus:border-valorant-red focus:outline-none disabled:opacity-50"
+          />
+          <span
+            className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-white/40"
+            aria-hidden
+          >
+            ⌕
+          </span>
+          {query && (
+            <button
+              type="button"
+              onClick={() => setQuery('')}
+              className="absolute right-2 top-1/2 -translate-y-1/2 rounded px-2 py-0.5 text-xs text-white/50 hover:text-white"
+              aria-label={t('game.clearSearch')}
+            >
+              ✕
+            </button>
+          )}
+        </div>
+      )}
+
+      {searchable && query && visibleIds.length === 0 && (
+        <p className="text-center text-sm text-white/40">{t('game.noAgentMatch')}</p>
+      )}
+
+      <div className={`grid gap-2 ${cols}`}>
+        {visibleIds.map((id) => (
+          <AgentCard
+            key={id}
+            agentId={id}
+            selected={selectedAgent === id}
+            correct={correctAgent === id}
+            wrong={
+              disabled && selectedAgent === id && correctAgent && selectedAgent !== correctAgent
+            }
+            onSelect={onSelect}
+            disabled={disabled}
+          />
+        ))}
+      </div>
     </div>
   );
 }
