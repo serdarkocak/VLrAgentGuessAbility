@@ -6,12 +6,14 @@ import { HINT_COST } from '../data/abilities.js';
 import { saveScore } from '../lib/scores.js';
 import ShareCard from '../components/ShareCard.jsx';
 import { useLanguage } from '../i18n/LanguageContext.jsx';
+import { unlockAudioPlayback } from '../hooks/useAudio.js';
 
 export default function Result() {
   const location = useLocation();
   const navigate = useNavigate();
   const state = location.state;
   const { t, tMode, tDifficulty, tSlot, dateLocale } = useLanguage();
+// ... (omitting remaining lines for exact match replacement target)
 
   const [nickname, setNickname] = useState(() => localStorage.getItem('vq-nickname') || '');
   const [saved, setSaved] = useState(false);
@@ -138,7 +140,10 @@ export default function Result() {
       <div className="flex flex-wrap justify-center gap-4">
         <button
           type="button"
-          onClick={() => navigate(`/play?mode=${mode}&difficulty=${difficulty}`)}
+          onClick={() => {
+            unlockAudioPlayback();
+            navigate(`/play?mode=${mode}&difficulty=${difficulty}`);
+          }}
           className="btn-primary"
         >
           {t('result.playAgain')}

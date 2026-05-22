@@ -38,6 +38,8 @@ function AbilitySlotButton({
   isSelected,
   isCorrect,
   isWrong,
+  isEliminated,
+  isWrongFirstAttempt,
   disabled,
   onSelect,
   tSlotShort,
@@ -47,13 +49,17 @@ function AbilitySlotButton({
   return (
     <motion.button
       type="button"
-      disabled={disabled}
+      disabled={disabled || isEliminated || isWrongFirstAttempt}
       onClick={() => onSelect(slot)}
       title={ability?.name ?? tSlotShort(slot)}
       className={`slot-btn relative overflow-hidden ${isSelected ? 'selected' : ''} ${
         isCorrect ? '!border-green-500 !bg-green-500/20' : ''
-      } ${isWrong ? '!border-valorant-red/60 !opacity-60' : ''}`}
-      whileTap={disabled ? {} : { scale: 0.94 }}
+      } ${isWrong ? '!border-valorant-red/60 !opacity-60' : ''} ${
+        isEliminated ? '!opacity-20 pointer-events-none border-white/5 bg-transparent' : ''
+      } ${
+        isWrongFirstAttempt ? '!border-valorant-red !bg-valorant-red/15 !opacity-50 cursor-not-allowed shadow-[0_0_14px_rgba(255,70,85,0.35)]' : ''
+      }`}
+      whileTap={disabled || isEliminated || isWrongFirstAttempt ? {} : { scale: 0.94 }}
     >
       <div className="relative flex h-10 w-10 items-center justify-center">
         {hasIcon ? (
@@ -88,6 +94,13 @@ function AbilitySlotButton({
         {ability?.name ?? tSlotShort(slot)}
       </span>
       {isCorrect && <span className="absolute right-1 top-1 text-xs text-green-400">✓</span>}
+      
+      {/* Visual elimination overlay */}
+      {isEliminated && (
+        <div className="absolute inset-0 flex items-center justify-center bg-black/20">
+          <span className="text-lg font-bold text-valorant-red drop-shadow">✕</span>
+        </div>
+      )}
     </motion.button>
   );
 }
@@ -95,6 +108,8 @@ function AbilitySlotButton({
 export default function AbilitySelector({
   selectedSlot,
   correctSlot,
+  eliminatedSlots = [],
+  firstAttemptSlot,
   agentIdForIcons,
   onSelect,
   disabled,
@@ -124,6 +139,8 @@ export default function AbilitySelector({
           isSelected={selectedSlot === slot}
           isCorrect={correctSlot === slot}
           isWrong={disabled && selectedSlot === slot && correctSlot && selectedSlot !== correctSlot}
+          isEliminated={eliminatedSlots.includes(slot)}
+          isWrongFirstAttempt={firstAttemptSlot === slot}
           disabled={disabled}
           onSelect={onSelect}
           tSlotShort={tSlotShort}

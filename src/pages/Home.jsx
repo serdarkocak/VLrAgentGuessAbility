@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useLanguage } from '../i18n/LanguageContext.jsx';
 import { isSupabaseConfigured } from '../lib/supabase.js';
+import { unlockAudioPlayback } from '../hooks/useAudio.js';
 
 const MODE_IDS = ['classic', 'timed', 'daily'];
 const MODE_ICONS = { classic: '◆', timed: '◷', daily: '◉' };
@@ -130,7 +131,10 @@ export default function Home() {
       {/* ── PRIMARY CTA ────────────────────────────────────── */}
       <motion.button
         type="button"
-        onClick={() => navigate(`/play?mode=${mode}&difficulty=${difficulty}`)}
+        onClick={() => {
+          unlockAudioPlayback();
+          navigate(`/play?mode=${mode}&difficulty=${difficulty}`);
+        }}
         className="btn-primary w-full py-4 text-xl"
         whileHover={{ scale: 1.02 }}
         whileTap={{ scale: 0.98 }}

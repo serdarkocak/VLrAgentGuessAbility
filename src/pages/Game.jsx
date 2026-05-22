@@ -9,6 +9,7 @@ import AudioPlayer from '../components/AudioPlayer.jsx';
 import AgentGrid from '../components/AgentGrid.jsx';
 import AbilitySelector from '../components/AbilitySelector.jsx';
 import HintPanel from '../components/HintPanel.jsx';
+import JokerPanel from '../components/JokerPanel.jsx';
 import CountdownBar from '../components/CountdownBar.jsx';
 import ScoreBoard from '../components/ScoreBoard.jsx';
 import ResultCard from '../components/ResultCard.jsx';
@@ -43,11 +44,19 @@ export default function Game() {
     submitAnswer,
     nextQuestion,
     finishGame,
+
+    // Jokers
+    jokersUsed,
+    activeJoker,
+    eliminatedSlots,
+    firstAttemptSlot,
+    applyJoker,
   } = useGameLogic({ mode, difficulty });
 
   const { play, replay, playSlow, stop, unload, isPlaying } = useAudio();
   const [hintMessages, setHintMessages] = useState([]);
   const [hasPlayedCurrent, setHasPlayedCurrent] = useState(false);
+  const [playCount, setPlayCount] = useState(0);
   const hasNavigatedRef = useRef(false);
 
   /* ── Timed mode countdown ────────────────────────────────────── */
@@ -81,21 +90,46 @@ export default function Game() {
   useEffect(() => {
     setHasPlayedCurrent(false);
     setHintMessages([]);
+    setPlayCount(0);
     unload();
   }, [questionIndex, currentQuestion?.key, unload]);
+
+  /* ── Auto-play on every new question ── */
+  useEffect(() => {
+    if (!currentQuestion?.soundPath || isFinished || feedback) return;
+
+    let cancelled = false;
+    const soundPath = currentQuestion.soundPath;
+
+    const timerId = window.setTimeout(() => {
+      if (cancelled) return;
+      play(soundPath);
+      setHasPlayedCurrent(true);
+      setPlayCount((c) => c + 1);
+    }, 120);
+
+    return () => {
+      cancelled = true;
+      window.clearTimeout(timerId);
+    };
+  }, [questionIndex, currentQuestion?.soundPath, play, isFinished, feedback]);
 
   /* ── Auto-submit when both agent + ability selected ─────────── */
   useEffect(() => {
     if (selectedAgent && selectedAbility && hasPlayedCurrent && !feedback) {
-      submitAnswer(selectedAgent, selectedAbility);
+      const res = submitAnswer(selectedAgent, selectedAbility);
+      if (res && res.secondChanceTriggered) {
+        setSelectedAbility(null);
+      }
     }
-  }, [selectedAgent, selectedAbility, hasPlayedCurrent, feedback, submitAnswer]);
+  }, [selectedAgent, selectedAbility, hasPlayedCurrent, feedback, submitAnswer, setSelectedAbility]);
 
   /* ── Audio handlers ──────────────────────────────────────────── */
   const handlePlay = useCallback(() => {
     if (!currentQuestion) return;
     play(currentQuestion.soundPath);
     setHasPlayedCurrent(true);
+    setPlayCount((c) => c + 1);
   }, [currentQuestion, play]);
 
   /* ── Hint handler ────────────────────────────────────────────── */
@@ -132,6 +166,8 @@ export default function Game() {
     ? (feedback.type === 'correct' ? feedback.entry?.question?.slot : feedback.correctSlot)
     : null;
 
+  const showAlert = playCount >= 3 && hintsUsed === 0 && !feedback;
+
   if (!currentQuestion && !isFinished) {
     return (
       <div className="flex min-h-[50vh] items-center justify-center">
@@ -165,11 +201,14 @@ export default function Game() {
           )}
         </div>
 
-        {/* Audio + hints */}
+        {/* Audio + Hints (combined card) */}
         <div className="card-panel flex flex-col gap-3 p-4">
           <AudioPlayer
             onPlay={handlePlay}
-            onReplay={() => replay()}
+            onReplay={() => {
+              replay();
+              setPlayCount((c) => c + 1);
+            }}
             isPlaying={isPlaying}
             hasPlayed={hasPlayedCurrent}
             disabled={!currentQuestion}
@@ -180,6 +219,7 @@ export default function Game() {
             hintMessages={hintMessages}
             onHint={handleHint}
             disabled={!!feedback || !hasPlayedCurrent}
+            showAlert={showAlert}
           />
         </div>
 
@@ -216,14 +256,29 @@ export default function Game() {
           disabled={!!feedback}
         />
 
-        {/* Ability buttons — icons appear after agent is selected */}
+        {/* Ability buttons */}
         <AbilitySelector
           selectedSlot={selectedAbility}
           correctSlot={correctSlot}
+          eliminatedSlots={eliminatedSlots}
+          firstAttemptSlot={firstAttemptSlot}
           agentIdForIcons={feedback ? correctAgent : selectedAgent}
           onSelect={setSelectedAbility}
           disabled={!!feedback}
         />
+
+        {/* Joker Section */}
+        {hasPlayedCurrent && (
+          <div className="mt-4">
+            <JokerPanel
+              jokersUsed={jokersUsed}
+              activeJoker={activeJoker}
+              onUseJoker={applyJoker}
+              disabled={!!feedback || !hasPlayedCurrent || selectedAbility !== null}
+              selectedAgent={selectedAgent}
+            />
+          </div>
+        )}
       </motion.div>
     </>
   );

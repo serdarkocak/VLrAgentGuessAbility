@@ -11,14 +11,21 @@ export default function Leaderboard() {
   const [scores, setScores] = useState([]);
   const [source, setSource] = useState('local');
   const [loading, setLoading] = useState(true);
+  const [filterMode, setFilterMode] = useState('all');
+  const [filterDifficulty, setFilterDifficulty] = useState('all');
 
   useEffect(() => {
-    getTopScores(50).then(({ scores: data, source: src }) => {
+    setLoading(true);
+    getTopScores({
+      mode: filterMode,
+      difficulty: filterDifficulty,
+      limit: 50,
+    }).then(({ scores: data, source: src }) => {
       setScores(data);
       setSource(src);
       setLoading(false);
     });
-  }, []);
+  }, [filterMode, filterDifficulty]);
 
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
@@ -34,6 +41,74 @@ export default function Leaderboard() {
         <Link to="/" className="btn-primary">
           {t('leaderboard.play')}
         </Link>
+      </div>
+
+      {/* Filters Segment Controls Section */}
+      <div className="card-panel mb-6 p-4 flex flex-col gap-4 md:flex-row md:items-center md:justify-between bg-[#0a1420]/80 border border-white/10 backdrop-blur-md">
+        {/* Mode Filter */}
+        <div className="flex flex-col gap-1.5">
+          <span className="text-[10px] uppercase tracking-widest text-white/40 font-bold">
+            {t('leaderboard.filterMode')}
+          </span>
+          <div className="flex bg-black/40 rounded-lg p-1 border border-white/5 self-start">
+            {[
+              { id: 'all', label: t('leaderboard.all') },
+              { id: 'classic', label: t('modes.classic') },
+              { id: 'timed', label: t('modes.timed') },
+            ].map((opt) => (
+              <button
+                key={opt.id}
+                type="button"
+                onClick={() => setFilterMode(opt.id)}
+                className="relative px-4 py-1.5 text-xs font-semibold rounded-md transition duration-250 cursor-pointer"
+              >
+                {filterMode === opt.id && (
+                  <motion.div
+                    layoutId="activeModeBg"
+                    className="absolute inset-0 bg-valorant-red rounded-md z-0"
+                    transition={{ type: 'spring', stiffness: 350, damping: 28 }}
+                  />
+                )}
+                <span className={`relative z-10 ${filterMode === opt.id ? 'text-white' : 'text-white/60 hover:text-white'}`}>
+                  {opt.label}
+                </span>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Difficulty Filter */}
+        <div className="flex flex-col gap-1.5">
+          <span className="text-[10px] uppercase tracking-widest text-white/40 font-bold">
+            {t('leaderboard.filterDifficulty')}
+          </span>
+          <div className="flex bg-black/40 rounded-lg p-1 border border-white/5 self-start md:self-end">
+            {[
+              { id: 'all', label: t('leaderboard.all') },
+              { id: 'easy', label: t('difficulties.easy') },
+              { id: 'medium', label: t('difficulties.medium') },
+              { id: 'hard', label: t('difficulties.hard') },
+            ].map((opt) => (
+              <button
+                key={opt.id}
+                type="button"
+                onClick={() => setFilterDifficulty(opt.id)}
+                className="relative px-4 py-1.5 text-xs font-semibold rounded-md transition duration-250 cursor-pointer"
+              >
+                {filterDifficulty === opt.id && (
+                  <motion.div
+                    layoutId="activeDiffBg"
+                    className="absolute inset-0 bg-valorant-red rounded-md z-0"
+                    transition={{ type: 'spring', stiffness: 350, damping: 28 }}
+                  />
+                )}
+                <span className={`relative z-10 ${filterDifficulty === opt.id ? 'text-white' : 'text-white/60 hover:text-white'}`}>
+                  {opt.label}
+                </span>
+              </button>
+            ))}
+          </div>
+        </div>
       </div>
 
       <div className="card-panel overflow-hidden">

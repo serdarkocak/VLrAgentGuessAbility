@@ -44,7 +44,36 @@ export default function Layout({ children }) {
           </div>
         </header>
 
-        <main className="mx-auto w-full max-w-2xl flex-1 px-4 py-8">{children}</main>
+        {/* Absolute Left Fixed Advertisement Panel (Skyscraper)
+        <aside className="fixed left-4 top-24 bottom-6 z-30 hidden w-[160px] flex-col gap-1.5 rounded-xl border border-white/10 bg-white/[0.02] p-2 text-center xl:flex">
+          <span className="text-[8px] uppercase tracking-widest text-white/30 font-bold">
+            REKLAM / ADS
+          </span>
+          <div className="flex h-full flex-col items-center justify-center rounded-lg bg-black/45 border border-dashed border-white/10 p-2 text-[10px] text-white/20 select-none">
+            <span className="text-lg mb-1">📢</span>
+            <span>160x600</span>
+            <span>Skyscraper Ad</span>
+            <span className="text-[8px] text-white/10 mt-2">AdSense / Banner Code Here</span>
+          </div>
+        </aside>
+
+        {/* Absolute Right Fixed Advertisement Panel (Skyscraper) 
+        <aside className="fixed right-4 top-24 bottom-6 z-30 hidden w-[160px] flex-col gap-1.5 rounded-xl border border-white/10 bg-white/[0.02] p-2 text-center xl:flex">
+          <span className="text-[8px] uppercase tracking-widest text-white/30 font-bold">
+            REKLAM / ADS
+          </span>
+          <div className="flex h-full flex-col items-center justify-center rounded-lg bg-black/45 border border-dashed border-white/10 p-2 text-[10px] text-white/20 select-none">
+            <span className="text-lg mb-1">📢</span>
+            <span>160x600</span>
+            <span>Skyscraper Ad</span>
+            <span className="text-[8px] text-white/10 mt-2">AdSense / Banner Code Here</span>
+          </div>
+        </aside> */}
+
+        {/* Main Content Column */}
+        <main className="mx-auto w-full max-w-2xl flex-1 px-4 py-8">
+          {children}
+        </main>
 
         {!isGame && (
           <footer className="mx-auto w-full max-w-2xl space-y-3 px-4 pb-6">

@@ -133,3 +133,59 @@
     text-shadow: 0 0 18px rgba(255, 255, 255, 0.28);
   }
 }
+
+/* ── Custom Animations ── */
+@keyframes hint-pulse {
+  0% {
+    border-color: rgba(255, 70, 85, 0.3);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  }
+  50% {
+    border-color: rgba(255, 70, 85, 0.85);
+    box-shadow: 0 0 25px rgba(255, 70, 85, 0.35), inset 0 1px 0 rgba(255, 70, 85, 0.2);
+  }
+  100% {
+    border-color: rgba(255, 70, 85, 0.3);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  }
+}
+
+.hint-alert-glow {
+  animation: hint-pulse 1.5s infinite ease-in-out;
+}
+
+@keyframes input-pulse-red {
+  0% {
+    border-color: rgba(255, 255, 255, 0.2);
+    box-shadow: none;
+  }
+  50% {
+    border-color: rgba(255, 70, 85, 0.8);
+    box-shadow: 0 0 15px rgba(255, 70, 85, 0.25);
+  }
+  100% {
+    border-color: rgba(255, 255, 255, 0.2);
+    box-shadow: none;
+  }
+}
+
+.search-glow-init {
+  animation: input-pulse-red 2s ease-in-out;
+}
+
+.joker-card {
+  @apply flex flex-col items-center justify-center gap-1 p-3 rounded-xl border border-white/10
+         bg-white/[0.03] backdrop-blur-md transition-all duration-200 cursor-pointer;
+}
+
+.joker-card.active {
+  @apply border-yellow-500 bg-yellow-500/10 shadow-[0_0_20px_rgba(234,179,8,0.25)] scale-[1.05];
+}
+
+.joker-card:not(.active):not(.used):hover {
+  @apply border-valorant-red bg-valorant-red/10 scale-[1.03];
+}
+
+.joker-card.used {
+  @apply opacity-30 cursor-not-allowed border-white/5 bg-transparent;
+}

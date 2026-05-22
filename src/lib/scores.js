@@ -39,11 +39,17 @@ export async function saveScore({ nickname, mode, difficulty, score, correct, to
   return { ok: true, source: 'local' };
 }
 
-export async function getTopScores(limit = 50) {
+export async function getTopScores({ mode, difficulty, limit = 50 } = {}) {
   if (isSupabaseConfigured && supabase) {
-    const { data, error } = await supabase
-      .from('scores')
-      .select('*')
+    let query = supabase.from('scores').select('*');
+    if (mode && mode !== 'all') {
+      query = query.eq('mode', mode);
+    }
+    if (difficulty && difficulty !== 'all') {
+      query = query.eq('difficulty', difficulty);
+    }
+    
+    const { data, error } = await query
       .order('score', { ascending: false })
       .limit(limit);
 
@@ -52,8 +58,14 @@ export async function getTopScores(limit = 50) {
     }
   }
 
-  const local = readLocalScores()
-    .sort((a, b) => b.score - a.score)
-    .slice(0, limit);
-  return { scores: local, source: 'local' };
+  let local = readLocalScores();
+  if (mode && mode !== 'all') {
+    local = local.filter((s) => s.mode === mode);
+  }
+  if (difficulty && difficulty !== 'all') {
+    local = local.filter((s) => s.difficulty === difficulty);
+  }
+  
+  local.sort((a, b) => b.score - a.score);
+  return { scores: local.slice(0, limit), source: 'local' };
 }

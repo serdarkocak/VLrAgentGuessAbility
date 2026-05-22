@@ -4,7 +4,7 @@ import { AGENTS } from '../data/agents.js';
 import { getAgentImage } from '../lib/valorantApi.js';
 import { useLanguage } from '../i18n/LanguageContext.jsx';
 
-const SEARCH_MIN_AGENTS = 10;
+const SEARCH_MIN_AGENTS = 8;
 
 function AgentCard({ agentId, selected, correct, wrong, onSelect, disabled }) {
   const [portrait, setPortrait] = useState(null);
@@ -107,31 +107,33 @@ export default function AgentGrid({
   return (
     <div className="space-y-3">
       {searchable && (
-        <div className="relative">
-          <input
-            type="search"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder={t('game.searchAgent')}
-            disabled={disabled}
-            className="w-full rounded-sm border border-white/20 bg-valorant-dark py-2.5 pl-10 pr-4 text-white placeholder:text-white/30 focus:border-valorant-red focus:outline-none disabled:opacity-50"
-          />
-          <span
-            className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-white/40"
-            aria-hidden
-          >
-            ⌕
-          </span>
-          {query && (
-            <button
-              type="button"
-              onClick={() => setQuery('')}
-              className="absolute right-2 top-1/2 -translate-y-1/2 rounded px-2 py-0.5 text-xs text-white/50 hover:text-white"
-              aria-label={t('game.clearSearch')}
+        <div className="sticky top-0 z-20 -mx-1 bg-[#0a1420]/95 py-2 backdrop-blur-md">
+          <div className="relative">
+            <input
+              type="search"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder={t('game.searchAgent')}
+              disabled={disabled}
+              className="search-glow-init w-full rounded-md border border-white/20 bg-valorant-dark/90 py-3.5 pl-11 pr-10 text-base text-white placeholder:text-white/40 focus:border-valorant-red focus:outline-none focus:ring-1 focus:ring-valorant-red disabled:opacity-50 transition-all"
+            />
+            <span
+              className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-lg text-white/40"
+              aria-hidden
             >
-              ✕
-            </button>
-          )}
+              🔍
+            </span>
+            {query && (
+              <button
+                type="button"
+                onClick={() => setQuery('')}
+                className="absolute right-3 top-1/2 -translate-y-1/2 rounded p-1 text-sm text-white/50 hover:text-white"
+                aria-label={t('game.clearSearch')}
+              >
+                ✕
+              </button>
+            )}
+          </div>
         </div>
       )}
 

@@ -11,6 +11,8 @@ import {
 } from '../data/abilities.js';
 import { pickDailyQuestions } from '../lib/dailySeed.js';
 
+const JOKER_PENALTY = 70;
+
 const DIFFICULTY_OPTIONS = {
   easy: 4,
   medium: 8,
@@ -46,6 +48,14 @@ export function useGameLogic({ mode, difficulty }) {
   const [history, setHistory] = useState([]);
   const [isFinished, setIsFinished] = useState(false);
   const [correctCount, setCorrectCount] = useState(0);
+
+  /* ── Joker States ────────────────────────────────────────────── */
+  const [jokersUsed, setJokersUsed] = useState({ fiftyFifty: false, doubleAnswer: false });
+  const [activeJoker, setActiveJoker] = useState(null);
+  const [eliminatedSlots, setEliminatedSlots] = useState([]);
+  const [secondChanceActive, setSecondChanceActive] = useState(false);
+  const [firstAttemptWrong, setFirstAttemptWrong] = useState(false);
+  const [firstAttemptSlot, setFirstAttemptSlot] = useState(null);
 
   const questions = useMemo(() => {
     if (mode === 'daily') return pickDailyQuestions(QUESTION_POOL, TOTAL_QUESTIONS_CLASSIC);
@@ -84,6 +94,34 @@ export function useGameLogic({ mode, difficulty }) {
     [currentQuestion, revealedHints, hintsUsed],
   );
 
+  /* ── Use Joker Action ─────────────────────────────────────────── */
+  const applyJoker = useCallback(
+    (jokerType) => {
+      if (!currentQuestion || jokersUsed[jokerType] || activeJoker || feedback) return null;
+
+      setJokersUsed((prev) => ({ ...prev, [jokerType]: true }));
+      setActiveJoker(jokerType);
+
+      if (jokerType === 'fiftyFifty') {
+        const correctSlot = currentQuestion.slot;
+        const slots = ['c', 'q', 'e', 'x'];
+        const wrongSlots = slots.filter((s) => s !== correctSlot);
+        const shuffledWrong = shuffle(wrongSlots);
+        const eliminated = shuffledWrong.slice(0, 2);
+        setEliminatedSlots(eliminated);
+        return { type: 'fiftyFifty', value: eliminated };
+      }
+
+      if (jokerType === 'doubleAnswer') {
+        setSecondChanceActive(true);
+        return { type: 'doubleAnswer' };
+      }
+
+      return null;
+    },
+    [currentQuestion, jokersUsed, activeJoker, feedback]
+  );
+
   const submitAnswer = useCallback(
     (agentId, slot) => {
       if (!currentQuestion || feedback) return null;
@@ -92,10 +130,22 @@ export function useGameLogic({ mode, difficulty }) {
       const abilityCorrect = slot === currentQuestion.slot;
       const bothCorrect = agentCorrect && abilityCorrect;
 
+      // Handle Double Answer Joker first attempt
+      if (secondChanceActive && !abilityCorrect && !firstAttemptWrong) {
+        setFirstAttemptWrong(true);
+        setFirstAttemptSlot(slot);
+        return { secondChanceTriggered: true };
+      }
+
       let points = 0;
       if (agentCorrect) points += SCORE_AGENT;
       if (abilityCorrect) points += SCORE_ABILITY;
       if (bothCorrect) points += SCORE_BOTH_BONUS;
+
+      // Apply joker penalty (-70) ONLY on correct answer
+      if (bothCorrect && activeJoker) {
+        points = Math.max(0, points - JOKER_PENALTY);
+      }
 
       const entry = {
         question: currentQuestion,
@@ -105,6 +155,7 @@ export function useGameLogic({ mode, difficulty }) {
         abilityCorrect,
         bothCorrect,
         points,
+        usedJoker: activeJoker,
       };
 
       setHistory((h) => [...h, entry]);
@@ -125,7 +176,7 @@ export function useGameLogic({ mode, difficulty }) {
 
       return entry;
     },
-    [currentQuestion, feedback, mode],
+    [currentQuestion, feedback, mode, secondChanceActive, firstAttemptWrong, activeJoker],
   );
 
   const nextQuestion = useCallback(() => {
@@ -133,6 +184,13 @@ export function useGameLogic({ mode, difficulty }) {
     setSelectedAgent(null);
     setSelectedAbility(null);
     setRevealedHints([]);
+    
+    // Reset temporary per-question joker states
+    setActiveJoker(null);
+    setEliminatedSlots([]);
+    setSecondChanceActive(false);
+    setFirstAttemptWrong(false);
+    setFirstAttemptSlot(null);
 
     if (mode === 'timed') {
       setQuestionIndex((i) => i + 1);
@@ -165,6 +223,14 @@ export function useGameLogic({ mode, difficulty }) {
     setHistory([]);
     setIsFinished(false);
     setCorrectCount(0);
+
+    // Reset all joker states
+    setJokersUsed({ fiftyFifty: false, doubleAnswer: false });
+    setActiveJoker(null);
+    setEliminatedSlots([]);
+    setSecondChanceActive(false);
+    setFirstAttemptWrong(false);
+    setFirstAttemptSlot(null);
   }, []);
 
   return {
@@ -192,5 +258,13 @@ export function useGameLogic({ mode, difficulty }) {
     finishGame,
     reset,
     TIMED_MODE_SECONDS,
+    
+    // Export joker states/actions
+    jokersUsed,
+    activeJoker,
+    eliminatedSlots,
+    firstAttemptWrong,
+    firstAttemptSlot,
+    applyJoker,
   };
 }
