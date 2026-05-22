@@ -182,6 +182,11 @@ export default function BattleRoom() {
             placeholder="ABCD"
             className="w-full rounded-sm border border-white/20 bg-valorant-dark px-4 py-3 text-center font-valorant text-2xl tracking-[0.3em] uppercase focus:border-valorant-red focus:outline-none"
           />
+          {joinCode.length > 0 && !battle.playerName.trim() && (
+            <p className="text-center text-xs text-yellow-400/90 animate-pulse font-medium py-1">
+              ⚠️ {t('battle.enterNicknameFirst')}
+            </p>
+          )}
           <button
             type="button"
             className="btn-secondary w-full"

@@ -172,6 +172,7 @@ export const translations = {
       supabaseRequired: 'Kapışma modu için Supabase gerekli.',
       expired: 'Oda süresi doldu veya kapatıldı',
       notFound: 'Oda bulunamadı',
+      enterNicknameFirst: 'Lütfen önce yukarıdan bir takma ad girin!',
     },
     legal: {
       riotDisclaimer:
@@ -434,6 +435,7 @@ export const translations = {
       supabaseRequired: 'Battle mode requires Supabase.',
       expired: 'Room expired or was closed',
       notFound: 'Room not found',
+      enterNicknameFirst: 'Please enter a nickname first!',
     },
     legal: {
       riotDisclaimer:

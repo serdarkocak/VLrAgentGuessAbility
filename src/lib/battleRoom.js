@@ -35,7 +35,7 @@ export async function createRoom(hostName) {
 export async function fetchRoom(code) {
   if (!supabase) return { room: null, error: new Error('Supabase not configured') };
 
-  const { data, error } = await supabase.from('rooms').select('*').eq('code', code).single();
+  const { data, error } = await supabase.from('rooms').select('*').eq('code', code).maybeSingle();
   return { room: data, error };
 }
 
