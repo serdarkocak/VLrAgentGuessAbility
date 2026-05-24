@@ -9,7 +9,6 @@ import AudioPlayer from '../components/AudioPlayer.jsx';
 import AgentGrid from '../components/AgentGrid.jsx';
 import AbilitySelector from '../components/AbilitySelector.jsx';
 import HintPanel from '../components/HintPanel.jsx';
-import JokerPanel from '../components/JokerPanel.jsx';
 import CountdownBar from '../components/CountdownBar.jsx';
 import ScoreBoard from '../components/ScoreBoard.jsx';
 import ResultCard from '../components/ResultCard.jsx';
@@ -247,7 +246,7 @@ export default function Game() {
           )}
         </AnimatePresence>
 
-        {/* Agent grid */}
+        {/* Agent grid (full width, no sidebar) */}
         <AgentGrid
           agentIds={agentChoices}
           selectedAgent={selectedAgent}
@@ -256,29 +255,79 @@ export default function Game() {
           disabled={!!feedback}
         />
 
-        {/* Ability buttons */}
-        <AbilitySelector
-          selectedSlot={selectedAbility}
-          correctSlot={correctSlot}
-          eliminatedSlots={eliminatedSlots}
-          firstAttemptSlot={firstAttemptSlot}
-          agentIdForIcons={feedback ? correctAgent : selectedAgent}
-          onSelect={setSelectedAbility}
-          disabled={!!feedback}
-        />
+        {/* Ability buttons with joker buttons flanking */}
+        <div className="flex items-stretch gap-2">
+          {/* %50 Joker — far left */}
+          {hasPlayedCurrent && (
+            <motion.button
+              type="button"
+              disabled={!!feedback || !hasPlayedCurrent || selectedAbility !== null || jokersUsed.fiftyFifty || !selectedAgent}
+              onClick={() => applyJoker('fiftyFifty')}
+              whileHover={jokersUsed.fiftyFifty || !selectedAgent ? {} : { scale: 1.05 }}
+              whileTap={jokersUsed.fiftyFifty || !selectedAgent ? {} : { scale: 0.95 }}
+              title={t('game.jokerFiftyFiftyDesc')}
+              className={`relative flex flex-col items-center justify-center gap-1 rounded-lg border px-3 py-2 min-w-[60px] transition-all duration-200 ${
+                jokersUsed.fiftyFifty
+                  ? 'opacity-20 cursor-not-allowed border-white/5 bg-white/[0.01]'
+                  : activeJoker === 'fiftyFifty'
+                  ? 'border-yellow-400 bg-yellow-400/15 shadow-[0_0_12px_rgba(250,204,21,0.25)]'
+                  : !selectedAgent
+                  ? 'opacity-40 cursor-not-allowed border-yellow-500/10'
+                  : 'border-yellow-500/25 bg-yellow-500/[0.03] hover:border-yellow-400/60 hover:bg-yellow-400/10 cursor-pointer'
+              }`}
+            >
+              <span className="text-lg leading-none">🌓</span>
+              <span className="font-valorant text-[11px] text-yellow-300 leading-tight">%50</span>
+              {jokersUsed.fiftyFifty && (
+                <span className="absolute inset-0 flex items-center justify-center rounded-lg bg-black/60 text-xs font-bold text-white/40">
+                  ❌
+                </span>
+              )}
+            </motion.button>
+          )}
 
-        {/* Joker Section */}
-        {hasPlayedCurrent && (
-          <div className="mt-4">
-            <JokerPanel
-              jokersUsed={jokersUsed}
-              activeJoker={activeJoker}
-              onUseJoker={applyJoker}
-              disabled={!!feedback || !hasPlayedCurrent || selectedAbility !== null}
-              selectedAgent={selectedAgent}
+          {/* Ability Selector — center, fills remaining space */}
+          <div className="flex-1 min-w-0">
+            <AbilitySelector
+              selectedSlot={selectedAbility}
+              correctSlot={correctSlot}
+              eliminatedSlots={eliminatedSlots}
+              firstAttemptSlot={firstAttemptSlot}
+              agentIdForIcons={feedback ? correctAgent : selectedAgent}
+              onSelect={setSelectedAbility}
+              disabled={!!feedback}
             />
           </div>
-        )}
+
+          {/* 2x Joker — far right */}
+          {hasPlayedCurrent && (
+            <motion.button
+              type="button"
+              disabled={!!feedback || !hasPlayedCurrent || selectedAbility !== null || jokersUsed.doubleAnswer || !selectedAgent}
+              onClick={() => applyJoker('doubleAnswer')}
+              whileHover={jokersUsed.doubleAnswer || !selectedAgent ? {} : { scale: 1.05 }}
+              whileTap={jokersUsed.doubleAnswer || !selectedAgent ? {} : { scale: 0.95 }}
+              title={t('game.jokerDoubleAnswerDesc')}
+              className={`relative flex flex-col items-center justify-center gap-1 rounded-lg border px-3 py-2 min-w-[60px] transition-all duration-200 ${
+                jokersUsed.doubleAnswer
+                  ? 'opacity-20 cursor-not-allowed border-white/5 bg-white/[0.01]'
+                  : activeJoker === 'doubleAnswer'
+                  ? 'border-yellow-400 bg-yellow-400/15 shadow-[0_0_12px_rgba(250,204,21,0.25)]'
+                  : !selectedAgent
+                  ? 'opacity-40 cursor-not-allowed border-yellow-500/10'
+                  : 'border-yellow-500/25 bg-yellow-500/[0.03] hover:border-yellow-400/60 hover:bg-yellow-400/10 cursor-pointer'
+              }`}
+            >
+              <span className="text-lg leading-none">🔄</span>
+              <span className="font-valorant text-[11px] text-yellow-300 leading-tight">2x</span>
+              {jokersUsed.doubleAnswer && (
+                <span className="absolute inset-0 flex items-center justify-center rounded-lg bg-black/60 text-xs font-bold text-white/40">
+                  ❌
+                </span>
+              )}
+            </motion.button>
+          )}
+        </div>
       </motion.div>
     </>
   );

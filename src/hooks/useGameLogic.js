@@ -184,7 +184,7 @@ export function useGameLogic({ mode, difficulty }) {
     setSelectedAgent(null);
     setSelectedAbility(null);
     setRevealedHints([]);
-    
+
     // Reset temporary per-question joker states
     setActiveJoker(null);
     setEliminatedSlots([]);
@@ -258,7 +258,7 @@ export function useGameLogic({ mode, difficulty }) {
     finishGame,
     reset,
     TIMED_MODE_SECONDS,
-    
+
     // Export joker states/actions
     jokersUsed,
     activeJoker,
